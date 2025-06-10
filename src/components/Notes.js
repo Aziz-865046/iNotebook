@@ -7,7 +7,7 @@ import AddNote from "./AddNote";
 
 const Notes = () => {
   const context = useContext(NoteContext);
-  const { notes, getNotes } = context;
+  const { notes, getNotes, editNote } = context;
   useEffect(() => {
     getNotes();
     // eslint-disable-next-line
@@ -21,20 +21,21 @@ const Notes = () => {
       edescription: currentNote.description,
       etag: currentNote.tag,
     });
-    // Logic to update the note
-    console.log("Updating note:", currentNote);
   };
   const ref = useRef(null);
+  const refClose = useRef(null);
 
   const [note, setNote] = useState({
+    id: "",
     etitle: "",
     edescription: "",
     etag: "default",
   });
 
   const handaleAddNote = (e) => {
-    console.log("Updating note:", note);
     e.preventDefault();
+    editNote(note.id, note.etitle, note.edescription, note.etag);
+    refClose.current.click();
   };
   const onChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
@@ -58,6 +59,7 @@ const Notes = () => {
         tabIndex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
+        // aria-hidden="inert"
       >
         <div className="modal-dialog">
           <div className="modal-content">
@@ -86,6 +88,8 @@ const Notes = () => {
                     aria-describedby="emailHelp"
                     onChange={onChange}
                     value={note.etitle}
+                    minLength={5}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -99,6 +103,8 @@ const Notes = () => {
                     name="edescription"
                     onChange={onChange}
                     value={note.edescription}
+                    minLength={5}
+                    required
                   />
                 </div>
                 <div className="mb-3">
@@ -118,6 +124,7 @@ const Notes = () => {
             </div>
             <div className="modal-footer">
               <button
+                ref={refClose}
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
@@ -125,6 +132,9 @@ const Notes = () => {
                 Close
               </button>
               <button
+                disabled={
+                  note.etitle.length < 5 || note.edescription.length < 5
+                }
                 type="button"
                 className="btn btn-primary"
                 onClick={handaleAddNote}
@@ -137,6 +147,11 @@ const Notes = () => {
       </div>
       <div className="row my-3">
         <h1>Your Notes</h1>
+        {/* {notes.length === 0 && "No notes to display"} */}
+        {notes.length === 0 && (
+          <div className="container">No notes to display</div>
+        )}
+
         {notes.map((note) => {
           return (
             <NoteItem key={note._id} updateNote={updateNote} note={note} />

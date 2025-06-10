@@ -5,6 +5,8 @@ import Navbar from "./components/Navbar";
 import About from "./components/About";
 import NoteState from "./context/notes/NoteState";
 import Alert from "./components/Alert";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
 
 function App() {
   return (
@@ -14,8 +16,10 @@ function App() {
         <Alert message="This is a sample alert message!" />
         <div className="container">
           <Routes>
-            <Route exact path="/home" element={<Home />} />
+            <Route exact path="/" element={<Home />} />
             <Route exact path="/about" element={<About />} />
+            <Route exact path="/signin" element={<SignIn />} />
+            <Route exact path="/signup" element={<SignUp />} />
           </Routes>
         </div>
       </NoteState>

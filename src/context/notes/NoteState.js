@@ -20,11 +20,9 @@ const NoteState = (props) => {
       },
     });
     const json = await response.json();
-    console.log(json);
 
     // Logic to fetch all notes
     setNotes(json);
-    // console.log("Fetching all notes");
   };
 
   // Add a new note
@@ -39,18 +37,7 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag }),
     });
-
-    // Logic to add a note
-    console.log("Adding a new note");
-    const note = {
-      _id: "683fb3d25c1d6196fce76c651",
-      user: "6839252dec30289b6e68bd34",
-      title: title,
-      description: description,
-      tag: tag,
-      date: "2025-06-04T02:47:46.517Z",
-      __v: 0,
-    };
+    const note = await response.json();
     setNotes(notes.concat(note));
   };
   // Delete a note
@@ -64,11 +51,10 @@ const NoteState = (props) => {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjgzOTI1MmRlYzMwMjg5YjZlNjhiZDM0In0sImlhdCI6MTc0ODU3NTg4OH0.ON_hN7Q2ZwqozlLI3p4rySP4o2HD_0XT7khB7ENpzgk",
       },
     });
+    // eslint-disable-next-line
     const json = response.json();
-    console.log(json);
 
     // Logic to delete a note
-    console.log("Deleting a note" + id);
     const newNotes = notes.filter((note) => {
       return note._id !== id;
     });
@@ -78,7 +64,7 @@ const NoteState = (props) => {
   const editNote = async (id, title, description, tag) => {
     //Api call to edit a note
     const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "auth-token":
@@ -86,17 +72,22 @@ const NoteState = (props) => {
       },
       body: JSON.stringify({ title, description, tag }),
     });
-    const json = response.json();
+    // eslint-disable-next-line
+    const json = await response.json();
+
+    let newNotes = JSON.parse(JSON.stringify(notes));
 
     // Logic to edit a note
-    for (let i = 0; i < notes.length; i++) {
-      const element = notes[i];
+    for (let i = 0; i < newNotes.length; i++) {
+      const element = newNotes[i];
       if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
+        newNotes[i].title = title;
+        newNotes[i].description = description;
+        newNotes[i].tag = tag;
+        break;
       }
     }
+    setNotes(newNotes);
   };
   return (
     <NoteContext.Provider

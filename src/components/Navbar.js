@@ -8,7 +8,7 @@ const Navbar = () => {
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/home">
+          <Link className="navbar-brand" to="/">
             iNotebook
           </Link>
           <button
@@ -30,7 +30,7 @@ const Navbar = () => {
                     location.pathname === "/home" ? " active" : ""
                   }`}
                   aria-current="page"
-                  to="/home"
+                  to="/"
                 >
                   Home
                 </Link>
@@ -46,6 +46,14 @@ const Navbar = () => {
                 </Link>
               </li>
             </ul>
+            <form className="d-flex">
+              <Link className="btn btn-primary mx-1" to="/signin" role="button">
+                Sign In
+              </Link>
+              <Link className="btn btn-primary mx-1" to="/signup" role="button">
+                Sign Up
+              </Link>
+            </form>
           </div>
         </div>
       </nav>
