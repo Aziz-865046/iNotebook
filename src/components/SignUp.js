@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-const SignUp = () => {
+const SignUp = (props) => {
   const [credentials, setCredentials] = useState({
     name: "",
     email: "",
@@ -11,6 +11,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // eslint-disable-next-line
     const { name, email, password, cpassword } = credentials;
     const response = await fetch(`http://localhost:5000/api/auth/creatUser`, {
       method: "POST",
@@ -21,10 +22,16 @@ const SignUp = () => {
     });
     const json = await response.json();
     console.log(json);
-
-    localStorage.setItem("token", json.authToken);
-    history("/");
-    //   window.location.href = "/";
+    if (json.success) {
+      // Save the auth token and redirect
+      localStorage.setItem("token", json.authToken);
+      history("/");
+      // Show a success message
+      props.showAlert("Account created successfully", "success");
+    } else {
+      // Show an error message
+      props.showAlert("Invalid credentials", "danger");
+    }
   };
   onchange = (e) => {
     setCredentials({
@@ -34,10 +41,11 @@ const SignUp = () => {
   };
   return (
     <>
-      <div className="container">
+      <div className="container mt-3">
+        {/* <h2>Create a account to use iNotebook</h2> */}
         <form onSubmit={handleSubmit}>
           <h2 className="my-3">Sign Up to iNotebook</h2>
-          <div className="mb-3">
+          <div className="my-3">
             <label htmlFor="name" className="form-label">
               Name
             </label>
